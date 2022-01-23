@@ -1,60 +1,69 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import './App.css';
 
-function App() { 
-  const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', number:'+584149693852' }
-  ]) 
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
-  const [ filterN, setfilterN ] = useState('')
-  const handleChangeName = (event) =>{
-    setNewName(event.target.value)
-    
-  }
-  const handleChangeNumber = (event) =>{
-    setNewNumber(event.target.value)
-  }
-  const handleSubmit = (event) =>{
-    event.preventDefault()
-    setPersons([...persons,{name:newName, number:newNumber}])
-    console.log(persons)
-    
-        
-  }
+function App() {
+  const [countries, setCountries] = useState([]);
+  const [search, setSearch] = useState("");
 
-  const filterNumbers = (event) => {
-    setfilterN(event.target.value)
+  useEffect(() => {
+    fetch("https://restcountries.com/v2/all")
+      .then((response) => response.json())
+      .then((data) => setCountries(data));
+  }, []);
+  const handleChange = (event) => {
+    return setSearch(event.target.value);
+  };
 
-  }
   return (
-    
     <div>
-      <h2>Phonebook</h2>
-      <p><strong>FILTRAR</strong></p>
-      <input onChange={filterNumbers} />
-      <form onSubmit={handleSubmit}>
-      <h2>Add a New</h2>
-        <div>
-          <p>name: <input onChange={handleChangeName} /></p>
-          number: <input onChange={handleChangeNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-     {persons
-     .filter(person=>{
-       return person.name.toLowerCase().indexOf(filterN.toLowerCase()) > -1
-     })
-     .map(person=>{
-      
-       return <p>{person.name} {person.number}</p>
-     })}
+      <h2>Find contries</h2>
+      <input type="text" onChange={handleChange}></input>
+      <ul>
+        <Mapeo countries={countries} search={search} />
+      </ul>
     </div>
-  )
-}
+  );
+};
+
+const Mapeo = ({ countries, search }) => {
+  let nuevo = [];
+   nuevo = countries
+    .filter(
+      (country) => country.name.toLowerCase().indexOf(search.toLowerCase()) > -1
+    )
+    .map((country) => {
+      return country;
+    });
+
+  if (nuevo.length === 1) {
+    return nuevo.map((nue) => {
+      return (
+        <div>
+          <h1>{nue.name}</h1>
+          <p>Capital: {nue.capital}</p>
+          <p>Population: {nue.population}</p>
+          <h3>languages:</h3>
+          <ul>
+            {nue.languages.map((lang) => (
+              <li>{lang.name}</li>
+            ))}
+          </ul>
+          <img src={nue.flag} width="100" />
+        </div>
+      );
+    });
+  } else {
+    return (
+      nuevo.map((nue) => {
+        return (
+          <div>
+        <h1>{nue.name}</h1>
+        </div>
+        )
+      })
+      )
+  }
+};
 
 
 export default App;
