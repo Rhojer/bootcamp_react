@@ -85,7 +85,7 @@ const ListarCursos = ({ course }) => {
           );
         })}
         <p>
-          <strong>total of exercises: {total}</strong>
+          <strong>total of exercises:  {total}</strong>
         </p>
       </div>
     );
