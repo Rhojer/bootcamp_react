@@ -2,31 +2,62 @@ import {useState} from 'react'
 import './App.css';
 
 function App() { const [counter, setCounter] = useState(0);
+  const ListOfClick = ({click}) => {
+    return <p>{click}</p>;
+  };
+  
+  
+  const WarningNotClicks = ()=><p>no hay ningun click</p>
+  const [counters, setCounters] = useState({
+    right: 0,
+    left: 0,
+    menssage: "mensaje de estado"
+  });
 
-  const Counter = ({ number }) => {
-    return <h1>{number}</h1>;
+  const [click, setClick] = useState([]);
+
+  const handleClickLeft = () => {
+    setCounters({
+      ...counters,
+      left: counters.left + 1
+    });
+    setClick((prevClick) => [...prevClick, "L"]);
+  };
+  const handleClickRight = () => {
+    setCounters({
+      ...counters,
+      right: counters.right + 1
+    });
+    setClick((prevClick) => [...prevClick, "R"]);
   };
 
-  const handleClick = ({ opcion }) => {
-    console.log({ opcion });
-    return setCounter(counter + 1);
+  const handleClickReset = () => {
+    setCounters({
+      ...counters,
+      left: 0,
+      right: 0
+    });
+    setClick([]);
   };
 
-  const handleClickReset = (event) => {
-      console.log({event});
-      setCounter(0);}
-  const handleClickDown = ()=> setCounter(counter - 1);
+  
 
-  const isEvent = counter % 2 === 0;
-  const menssage = isEvent ? "es par" : "es impar";
   return (
     <div>
       <p></p>
-      <Counter number={counter} />
-      <p>{menssage}</p>
-      <button onClick={handleClickDown}>decrementar</button>
+      {counters.left}
+      <button onClick={handleClickLeft}>izq</button>
       <button onClick={handleClickReset}>reset</button>
-      <button onClick={handleClick}>incrementar</button>
+      <button onClick={handleClickRight}>der</button>
+      {counters.right}
+      <p>{counters.menssage}</p>
+      <p> total de clicks: {click.length}</p>
+      {click.length === 0 
+      ?
+      <WarningNotClicks/>
+      :
+      <ListOfClick click={click} />
+      }
     </div>
   );
 }
