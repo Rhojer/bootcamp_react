@@ -1,69 +1,52 @@
-import {useState, useEffect} from 'react'
+import { useState, useEffect} from "react";
+import { getNotes, newNoteAdd } from "./services/notes";
 import './App.css';
 
 function App() {
-  const [countries, setCountries] = useState([]);
-  const [search, setSearch] = useState("");
+  const [note, setNote] = useState([]);
+  const [newNote, setNewNote] = useState("");
 
   useEffect(() => {
-    fetch("https://restcountries.com/v2/all")
-      .then((response) => response.json())
-      .then((data) => setCountries(data));
+    getNotes().then((note) => {
+      setNote(note);
+    });
   }, []);
+
   const handleChange = (event) => {
-    return setSearch(event.target.value);
+    setNewNote(event.target.value);
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const addNote = {
+      title: newNote,
+      body: newNote,
+      userId: note.length + 1
+    };
+    newNoteAdd(addNote).then((response) => {
+      setNote(note.concat(response));
+    });
   };
 
   return (
     <div>
-      <h2>Find contries</h2>
-      <input type="text" onChange={handleChange}></input>
       <ul>
-        <Mapeo countries={countries} search={search} />
+        {note.map((note) => {
+          return (
+            <div key={note.id}>
+              <li>
+                <h4>{note.title}</h4>
+                <p>{note.body}</p>
+              </li>
+            </div>
+          );
+        })}
       </ul>
+      <form onSubmit={handleSubmit}>
+        <input type="text" onChange={handleChange} />
+        <button>add</button>
+      </form>
     </div>
   );
-};
-
-const Mapeo = ({ countries, search }) => {
-  let nuevo = [];
-   nuevo = countries
-    .filter(
-      (country) => country.name.toLowerCase().indexOf(search.toLowerCase()) > -1
-    )
-    .map((country) => {
-      return country;
-    });
-
-  if (nuevo.length === 1) {
-    return nuevo.map((nue) => {
-      return (
-        <div>
-          <h1>{nue.name}</h1>
-          <p>Capital: {nue.capital}</p>
-          <p>Population: {nue.population}</p>
-          <h3>languages:</h3>
-          <ul>
-            {nue.languages.map((lang) => (
-              <li>{lang.name}</li>
-            ))}
-          </ul>
-          <img src={nue.flag} width="100" />
-        </div>
-      );
-    });
-  } else {
-    return (
-      nuevo.map((nue) => {
-        return (
-          <div>
-        <h1>{nue.name}</h1>
-        </div>
-        )
-      })
-      )
-  }
-};
-
+      };
 
 export default App;
