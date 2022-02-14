@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const getNotes = () => {
   return axios
-    .get("https://jsonplaceholder.typicode.com/posts")
+    .get("https://arcane-springs-44654.herokuapp.com/api/notes")
     .then((response) => {
       return response.data;
     });
@@ -10,7 +10,7 @@ export const getNotes = () => {
 
 export const newNoteAdd = (addNote) => {
   return axios
-    .post("https://jsonplaceholder.typicode.com/posts", addNote)
+    .post("https://arcane-springs-44654.herokuapp.com/api/notes", addNote)
     .then((response) => {
       return response.data;
     });

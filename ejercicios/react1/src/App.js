@@ -18,24 +18,24 @@ function App() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const addNote = {
-      title: newNote,
       body: newNote,
       userId: note.length + 1
     };
-    newNoteAdd(addNote).then((response) => {
-      setNote(note.concat(response));
+    newNoteAdd(addNote)
+    .then((response) => {
+      setNote((prevNote) => prevNote.concat(response));
     });
   };
 
   return (
     <div>
+      <h2>NOTES</h2>
       <ul>
         {note.map((note) => {
           return (
             <div key={note.id}>
               <li>
-                <h4>{note.title}</h4>
-                <p>{note.body}</p>
+                <h4>{note.body}</h4>
               </li>
             </div>
           );
