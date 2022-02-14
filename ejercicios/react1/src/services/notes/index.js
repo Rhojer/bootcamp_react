@@ -7,7 +7,6 @@ export const getNotes = () => {
       return response.data;
     });
 };
-
 export const newNoteAdd = (addNote) => {
   return axios
     .post("https://arcane-springs-44654.herokuapp.com/api/notes", addNote)
